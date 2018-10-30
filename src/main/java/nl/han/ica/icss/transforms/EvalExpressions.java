@@ -15,5 +15,31 @@ public class EvalExpressions implements Transform {
     @Override
     public void apply(AST ast) {
         variableValues = new LinkedList<>();
+        iterateThroughAST(ast.root);
+    }
+
+    private void iterateThroughAST(ASTNode node) {
+        if (node instanceof Declaration) {
+            calculateDeclaration((Declaration)node);
+        } else if (node instanceof VariableAssignment) {
+            calculateVariableAssignment((VariableAssignment)node);
+        }
+    }
+
+    private void calculateDeclaration(Declaration declaration) {
+
+    }
+
+    private void calculateVariableAssignment(VariableAssignment assignment) {
+        String variableName = assignment.name.name;
+        Literal value = calculateExpression(assignment.expression);
+    }
+
+    private Literal calculateExpression(Expression expression) {
+
+    }
+
+    private Literal calculateOperation(Operation operation) {
+
     }
 }
