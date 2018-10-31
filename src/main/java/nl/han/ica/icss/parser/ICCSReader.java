@@ -217,27 +217,6 @@ public class ICCSReader implements ICSSListener {
 
 	@Override
 	public void enterOperator(ICSSParser.OperatorContext ctx) {
-	    /*ASTNode top = currentContainer.peek();
-        Operation currentOperation;
-        String operator = ctx.getText();
-        switch (operator) {
-            case "+":
-                currentOperation = new AddOperation();
-                break;
-            default:
-                currentOperation = new SubtractOperation();
-                break;
-        }
-
-         if (top instanceof Operation) {
-            top.addChild(currentOperation);
-            currentContainer.pop();
-            currentContainer.push(currentOperation);
-        } else if (top instanceof Expression) {
-            currentOperation.addChild(top);
-            currentContainer.pop();
-            currentContainer.push(currentOperation);
-        }*/
 	}
 
 	@Override
@@ -246,24 +225,10 @@ public class ICCSReader implements ICSSListener {
 
     @Override
     public void enterMultiply(ICSSParser.MultiplyContext ctx) {
-        /*ASTNode top = currentContainer.peek();
-        Operation currentOperation  = new MultiplyOperation();
-
-        if (top instanceof Operation) {
-            top.addChild(currentOperation);
-            currentContainer.push(currentOperation);
-        } else if (top instanceof Expression) {
-            currentOperation.addChild(top);
-            currentContainer.pop();
-            currentContainer.push(currentOperation);
-        }*/
     }
 
     @Override
     public void exitMultiply(ICSSParser.MultiplyContext ctx) {
-        /*if (currentContainer.peek() instanceof MultiplyOperation) {
-            currentContainer.pop();
-        }*/
     }
 
     @Override
