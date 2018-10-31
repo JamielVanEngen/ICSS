@@ -120,15 +120,6 @@ public class ICCSReader implements ICSSListener {
         }
     }
 
-	@Override
-	public void enterBody(ICSSParser.BodyContext ctx) {
-	}
-
-	@Override
-	public void exitBody(ICSSParser.BodyContext ctx) {
-
-	}
-
     @Override
     public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {
         ASTNode parent = currentContainer.peek();
@@ -208,6 +199,15 @@ public class ICCSReader implements ICSSListener {
         if (parent instanceof Expression) {
             currentContainer.push(variableRef);
         }
+    }
+
+    @Override
+    public void enterBody(ICSSParser.BodyContext ctx) {
+    }
+
+    @Override
+    public void exitBody(ICSSParser.BodyContext ctx) {
+
     }
 
     @Override
