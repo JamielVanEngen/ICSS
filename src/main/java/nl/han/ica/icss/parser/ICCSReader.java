@@ -105,15 +105,15 @@ public class ICCSReader implements ICSSListener {
     @Override
     public void exitDecleration(ICSSParser.DeclerationContext ctx) {
 	    ASTNode currentTop = currentContainer.peek();
+	    // This if else-if structure has not been cleaned up to make it more readable in terms of variable names.
 	    if (currentTop instanceof Expression) {
+	        // When a variable or literal it means that it needs to be added to the decleration.
             ASTNode expression = currentContainer.pop();
             ASTNode declaration = currentContainer.pop();
             declaration.addChild(expression);
             ASTNode stylerule = currentContainer.peek();
             stylerule.addChild(declaration);
-        }
-        if (currentTop instanceof Declaration) {
-
+        }else if (currentTop instanceof Declaration) {
             ASTNode declaration = currentContainer.pop();
             ASTNode stylerule = currentContainer.peek();
             stylerule.addChild(declaration);
@@ -136,6 +136,9 @@ public class ICCSReader implements ICSSListener {
 
 	@Override
 	public void enterExpression(ICSSParser.ExpressionContext ctx) {
+	    // Handles operators here.
+        // The reason for this is to deal with the operator being second in the expression.
+        // This way there can be a nesting of operators.
 	    if (ctx.children.size() == 3) {
             Operation currentOperation;
             String operator = ctx.children.get(1).getText();
@@ -162,6 +165,7 @@ public class ICCSReader implements ICSSListener {
 	        currentContainer.pop();
 	        ASTNode parent = currentContainer.peek();
 	        parent.addChild(top);
+	        // The line underneath had to be added because a declaration is the only exception.
         } else if (!(top instanceof Declaration)) {
 	        currentContainer.pop();
         }
@@ -202,6 +206,19 @@ public class ICCSReader implements ICSSListener {
     }
 
     @Override
+    public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+        ASTNode test = new VariableAssignment();
+        currentContainer.push(test);
+    }
+
+    @Override
+    public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+        ASTNode variableAssignment =  currentContainer.pop();
+        ASTNode parent = currentContainer.peek();
+        parent.addChild(variableAssignment);
+    }
+
+    @Override
     public void enterBody(ICSSParser.BodyContext ctx) {
     }
 
@@ -229,19 +246,6 @@ public class ICCSReader implements ICSSListener {
 
     @Override
     public void exitMultiply(ICSSParser.MultiplyContext ctx) {
-    }
-
-    @Override
-    public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-	    ASTNode test = new VariableAssignment();
-	    currentContainer.push(test);
-    }
-
-    @Override
-    public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-	    ASTNode variableAssignment =  currentContainer.pop();
-	    ASTNode parent = currentContainer.peek();
-	    parent.addChild(variableAssignment);
     }
 
     @Override
