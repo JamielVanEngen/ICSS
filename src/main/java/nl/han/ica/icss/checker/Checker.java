@@ -45,6 +45,10 @@ public class Checker {
         checkSemantics(ast.root);
     }
 
+    /**
+     * This method recursively goes through the ASTTree.
+     * @param node The current node of the tree.
+     */
     private void checkSemantics(ASTNode node) {
         if (node instanceof Stylerule && ((Stylerule)node).selectors.size() >= 1) {
             variableTypes.add(new HashMap<>());
@@ -89,6 +93,21 @@ public class Checker {
         }
     }
 
+    private void checkIfUndeclaredVariablesAreUsed(VariableReference reference) {
+        if (!isVariableFoundInVariableTypes(reference.name)) {
+            reference.setError("Variable '" + reference.name + "' not defined!");
+        }
+    }
+
+    private boolean isVariableFoundInVariableTypes(String variableName) {
+        for (HashMap<String, ExpressionType> map : variableTypes) {
+            if (map.containsKey(variableName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void checkExpressionOperationSemantics(Operation expression) {
         ExpressionType lhsType = getExpressionType(expression.lhs);
         ExpressionType rhsType = getExpressionType(expression.rhs);
@@ -118,21 +137,6 @@ public class Checker {
         } else {
             return ExpressionType.SCALAR;
         }
-    }
-
-    private void checkIfUndeclaredVariablesAreUsed(VariableReference reference) {
-        if (!isVariableFoundInVariableTypes(reference.name)) {
-            reference.setError("Variable '" + reference.name + "' not defined!");
-        }
-    }
-
-    private boolean isVariableFoundInVariableTypes(String variableName) {
-        for (HashMap<String, ExpressionType> map : variableTypes) {
-            if (map.containsKey(variableName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void checkDeclarationSemantics(Declaration declaration) {
